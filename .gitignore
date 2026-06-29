@@ -1,0 +1,6 @@
+.env
+chrome_profile/
+__pycache__/
+*.pyc
+.env
+.DS_Store
