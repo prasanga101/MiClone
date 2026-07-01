@@ -9,14 +9,19 @@ from webdriver_manager.chrome import ChromeDriverManager
 class BaseScrapper:
     def __init__(self):
         self.driver = None
-    def start_brower(self):
+    def start_browser(self, attach=False):
         options = Options()
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--window-size=1280,900")
-        options.add_argument("--user-data-dir=./chrome_profile") #presistance
-        service = Service(ChromeDriverManager().install())
-        self.driver = webdriver.Chrome(service=service, options=options)
+        if attach:
+            options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
+            self.driver = webdriver.Chrome(options=options)
+        else:
+            options.add_argument("--no-sandbox")
+            options.add_argument("--disable-dev-shm-usage")
+            options.add_argument("--window-size=1280,900")
+            options.add_argument("--user-data-dir=/Users/prasangauprety/chrome_debug")
+            options.add_argument("--window-size=1920,1080")
+            service = Service(ChromeDriverManager().install())
+            self.driver = webdriver.Chrome(service=service, options=options)
         print("Browser started!")
     
     def wait_for_element(self, selector, by=By.CSS_SELECTOR, timeout=20):
