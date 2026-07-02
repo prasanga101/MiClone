@@ -29,7 +29,7 @@ def convo_has_messages(conversation_id):
     result = supabase.table("messages").select("id").eq("conversation_id", conversation_id).limit(1).execute()
     return len(result.data) > 0
 
-def insert_messages_batch(conversation_id, platform, messages):
+def insert_messages_batch(conversation_id, platform, messages, chunk_size=200):
     if not messages:
         return []
     existing = supabase.table("messages").select("sender,text").eq("conversation_id", conversation_id).execute()
@@ -41,8 +41,11 @@ def insert_messages_batch(conversation_id, platform, messages):
     ]
     if not new_msgs:
         return []
-    result = supabase.table("messages").insert(new_msgs).execute()
-    return result.data
+    inserted = []
+    for i in range(0, len(new_msgs), chunk_size):
+        result = supabase.table("messages").insert(new_msgs[i:i + chunk_size]).execute()
+        inserted.extend(result.data)
+    return inserted
 
 def insert_init_ts(platform):
     result = supabase.table("init_timestamp").insert({

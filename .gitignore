@@ -6,4 +6,6 @@ __pycache__/
 .DS_Store
 chrome_profile_instagram
 chrome_profile_messenger
-data
+/data/raw
+/data/your_instagram_activity
+/adapters
